@@ -2,3 +2,8 @@
 "Rate %@" = "給%@評分";
 "No, Thanks" = "不，謝謝";
 "Remind me later" = "稍後提醒我";
+
+// Do you like the app alert
+"Do you like this new version of %@?" = "你喜歡這個新版本的 %@ 嗎?";
+"LikeAlertYesButtonLabel" = "喜歡";
+"LikeAlertNoButtonLabel" = "不喜歡";

@@ -85,6 +85,22 @@ extern NSString *const kAppiraterReminderRequestDate;
  */
 #define APPIRATER_RATE_LATER			NSLocalizedStringFromTableInBundle(@"Remind me later", @"AppiraterLocalizable", [Appirater bundle], nil)
 
+/*!
+ The is the message do you like the app alert.
+ */
+#define APPIRATER_LOCALIZED_LIKE_ALERT_MESSAGE   NSLocalizedStringFromTableInBundle(@"Do you like this new version of %@?", @"AppiraterLocalizable", [Appirater bundle], nil)
+#define APPIRATER_LIKE_ALERT_MESSAGE    [NSString stringWithFormat:APPIRATER_LOCALIZED_LIKE_ALERT_MESSAGE, APPIRATER_APP_NAME]
+
+/*!
+ The text of the button that is labled "No" on the do you like the app alert.
+ */
+#define APPIRATER_NO_BUTTON             NSLocalizedStringFromTableInBundle(@"LikeAlertNoButtonLabel", @"AppiraterLocalizable", [Appirater bundle], nil)
+
+/*!
+ The text of the button that is labled "Yes" on the do you like the app alert.
+ */
+#define APPIRATER_YES_BUTTON            NSLocalizedStringFromTableInBundle(@"LikeAlertYesButtonLabel", @"AppiraterLocalizable", [Appirater bundle], nil)
+
 @interface Appirater : NSObject <UIAlertViewDelegate, SKStoreProductViewControllerDelegate> {
 
 	UIAlertView		*ratingAlert;

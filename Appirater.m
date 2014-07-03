@@ -75,6 +75,8 @@ static BOOL _alwaysUseMainBundle = NO;
 @property (nonatomic, copy) NSString *alertCancelTitle;
 @property (nonatomic, copy) NSString *alertRateTitle;
 @property (nonatomic, copy) NSString *alertRateLaterTitle;
+@property (nonatomic) UIAlertView *likeAlertView;
+
 - (BOOL)connectedToNetwork;
 + (Appirater*)sharedInstance;
 - (void)showPromptWithChecks:(BOOL)withChecks
@@ -296,6 +298,16 @@ static BOOL _alwaysUseMainBundle = NO;
   [self showRatingAlert:true];
 }
 
+- (void)showLikeAlert {
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:APPIRATER_LIKE_ALERT_MESSAGE
+                                                        message:nil
+                                                       delegate:self
+                                              cancelButtonTitle:APPIRATER_NO_BUTTON
+                                              otherButtonTitles:APPIRATER_YES_BUTTON, nil];
+    self.likeAlertView = alertView;
+    [alertView show];
+}
+
 - (BOOL)ratingConditionsHaveBeenMet {
 	if (_debug)
 		return YES;
@@ -441,7 +453,8 @@ static BOOL _alwaysUseMainBundle = NO;
 	{
         dispatch_async(dispatch_get_main_queue(),
                        ^{
-                           [self showRatingAlert];
+//                           [self showRatingAlert];
+                           [self showLikeAlert];
                        });
 	}
 }
@@ -455,7 +468,8 @@ static BOOL _alwaysUseMainBundle = NO;
 	{
         dispatch_async(dispatch_get_main_queue(),
                        ^{
-                           [self showRatingAlert];
+//                           [self showRatingAlert];
+                           [self showLikeAlert];
                        });
 	}
 }
@@ -620,38 +634,56 @@ static BOOL _alwaysUseMainBundle = NO;
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     
     id <AppiraterDelegate> delegate = _delegate;
-	
-	switch (buttonIndex) {
-		case 0:
-		{
-			// they don't want to rate it
-			[userDefaults setBool:YES forKey:kAppiraterDeclinedToRate];
-			[userDefaults synchronize];
-			if(delegate && [delegate respondsToSelector:@selector(appiraterDidDeclineToRate:)]){
-				[delegate appiraterDidDeclineToRate:self];
-			}
-			break;
-		}
-		case 1:
-		{
-			// they want to rate it
-			[Appirater rateApp];
-			if(delegate&& [delegate respondsToSelector:@selector(appiraterDidOptToRate:)]){
-				[delegate appiraterDidOptToRate:self];
-			}
-			break;
-		}
-		case 2:
-			// remind them later
-			[userDefaults setDouble:[[NSDate date] timeIntervalSince1970] forKey:kAppiraterReminderRequestDate];
-			[userDefaults synchronize];
-			if(delegate && [delegate respondsToSelector:@selector(appiraterDidOptToRemindLater:)]){
-				[delegate appiraterDidOptToRemindLater:self];
-			}
-			break;
-		default:
-			break;
-	}
+    
+    if (alertView == self.likeAlertView) {
+        switch (buttonIndex) {
+            case 0: {   // No
+                // treat it as no thanks. They don't want to rate.
+                [userDefaults setBool:YES forKey:kAppiraterDeclinedToRate];
+                [userDefaults synchronize];
+                [delegate appiraterDidSelectNoInLikeAlertView:self];
+                break;
+            }
+            case 1: {   // Yes
+                [self showRatingAlert];
+                break;
+            }
+            default:
+                break;
+        }
+    } else {    // ratingAlert
+        switch (buttonIndex) {
+            case 0:
+            {
+                // they don't want to rate it
+                [userDefaults setBool:YES forKey:kAppiraterDeclinedToRate];
+                [userDefaults synchronize];
+                if(delegate && [delegate respondsToSelector:@selector(appiraterDidDeclineToRate:)]){
+                    [delegate appiraterDidDeclineToRate:self];
+                }
+                break;
+            }
+            case 1:
+            {
+                // they want to rate it
+                [Appirater rateApp];
+                if(delegate&& [delegate respondsToSelector:@selector(appiraterDidOptToRate:)]){
+                    [delegate appiraterDidOptToRate:self];
+                }
+                break;
+            }
+            case 2:
+                // remind them later
+                [userDefaults setDouble:[[NSDate date] timeIntervalSince1970] forKey:kAppiraterReminderRequestDate];
+                [userDefaults synchronize];
+                if(delegate && [delegate respondsToSelector:@selector(appiraterDidOptToRemindLater:)]){
+                    [delegate appiraterDidOptToRemindLater:self];
+                }
+                break;
+            default:
+                break;
+        }
+    }
 }
 
 //Delegate call from the StoreKit view.
