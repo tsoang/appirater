@@ -2,3 +2,8 @@
 "Rate %@" = "%@ 평가하기";
 "No, Thanks" = "평가하지 않겠습니다";
 "Remind me later" = "다음에 평가하겠습니다";
+
+// Do you like the app alert
+"Do you like this new version of %@?" = "%@ 의 새로운 버전을 좋아하나요";
+"LikeAlertYesButtonLabel" = "좋아요";
+"LikeAlertNoButtonLabel" = "아니요";

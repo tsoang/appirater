@@ -2,3 +2,8 @@
 "Rate %@" = "قيم %@";
 "No, Thanks" = "لا شكرا";
 "Remind me later" = "ذكرني لاحقا";
+
+// Do you like the app alert
+"Do you like this new version of %@?" = "%@ هل تحب هذا الإصدار الجديد من";
+"LikeAlertYesButtonLabel" = "نعم";
+"LikeAlertNoButtonLabel" = "لا";
